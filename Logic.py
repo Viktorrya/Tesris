@@ -18,7 +18,7 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONUP or event.type == pygame.KEYUP:
                 if count == 0:
                     count = 1
                     play = True

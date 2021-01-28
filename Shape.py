@@ -1,9 +1,9 @@
 import pygame
 
-shapes = [((150, 0), (200, 0), (200, -50), (250, -50), (250, 0), (300, 0), (300, 50), (150, 50)),
-          ((150, 0), (350, 0), (350, 50), (150, 50)),
-          ((150, -50), (200, -50), (200, 0), (300, 0), (300, 50), (150, 50)),
-          ((200, -50), (300, -50), (30, 50), (200, 50))]
+shapes = [[[150, 0], [50, 0], [50, -50], [100, -50], [100, 0], [150, 0], [150, 50], [0, 50]],
+          [[150, 0], [200, 0], [200, 50], [0, 50]],
+          [[150, -50], [50, 0], [50, 50], [150, 50], [150, 100], [0, 100]],
+          [[200, -50], [100, 0], [100, 100], [0, 100]]]
 colors = [(255, 186, 0), (226, 139, 0), (241, 58, 19), (127, 143, 24)]
 
 
@@ -11,21 +11,25 @@ class Shape:
     def __init__(self, count):
         self.color = colors[count % 4]
         self.shape = shapes[count % 4]
+        self.a = []
 
     def render(self, screen):
-        pygame.draw.polygon(screen, self.color, self.shape)
-        c = tuple(map(lambda x: x // 2, self.color))
-        pygame.draw.polygon(screen, c, self.shape, 1)
+        self.a = [self.shape[0]]
+        for i in range(len(self.shape)):
+            if i > 0:
+                self.a.append([self.shape[i][0] + self.shape[0][0],
+                          self.shape[i][1] + self.shape[0][1]])
+        pygame.draw.polygon(screen, self.color, self.a)
 
     def move(self, screen):
-        self.shape = tuple(map(lambda x: (x[0], x[1] + 10), self.shape))
+        self.shape[0][1] += 50
         self.render(screen)
 
     def click(self, pos, screen):
-        left = min(list(map(lambda x: x[0], self.shape)))
-        right = max(list(map(lambda x: x[0], self.shape)))
+        left = min(list(map(lambda x: x[0], self.a)))
+        right = max(list(map(lambda x: x[0], self.a)))
         if pos[0] < left:
-            self.shape = tuple(map(lambda x: (x[0] - 50, x[1]), self.shape))
+            self.shape[0][0] -= 50
         if pos[0] > right:
-            self.shape = tuple(map(lambda x: (x[0] + 50, x[1]), self.shape))
+            self.shape[0][0] += 50
         self.render(screen)
