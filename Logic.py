@@ -29,5 +29,8 @@ if __name__ == '__main__':
         board.render(screen)
         if play:
             shape.move(screen)
+            if shape.ckeck_collid(screen):
+                count_of_shapes += 1
+                shape = Shape(count_of_shapes)
         pygame.display.flip()
     pygame.quit()
