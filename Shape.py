@@ -1,35 +1,47 @@
 import pygame
+import os, sys
 
-shapes = [[[150, 0], [50, 0], [50, -50], [100, -50], [100, 0], [150, 0], [150, 50], [0, 50]],
-          [[150, 0], [200, 0], [200, 50], [0, 50]],
-          [[150, -50], [50, 0], [50, 50], [150, 50], [150, 100], [0, 100]],
-          [[200, -50], [100, 0], [100, 100], [0, 100]]]
-colors = [(255, 186, 0), (226, 139, 0), (241, 58, 19), (127, 143, 24)]
+sizes = [(50, 200), (150, 100), (100, 100), (100, 150)]
+
+
+def load_image(name, size, colorkey=None):
+    fullname = os.path.join('data', name)
+    image = pygame.image.load(fullname)
+    if colorkey is not None:
+        image = image.convert()
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    else:
+        image = image.convert_alpha()
+    image = pygame.transform.scale(image, size)
+    return image
 
 
 class Shape:
     def __init__(self, count):
-        self.color = colors[count % 4]
-        self.shape = shapes[count % 4]
+        self.shape = (count + 1) % 4
         self.a = []
+        self.all_sprites = pygame.sprite.Group()
+        self.moving_sprite = pygame.sprite.Sprite()
+        size = sizes[(count + 1) % 4]
+        self.moving_sprite.image = load_image('2.png', size)
+        self.moving_sprite.rect = self.moving_sprite.image.get_rect()
+        self.moving_sprite.rect.x, self.moving_sprite.rect.y = 200, 0
 
     def render(self, screen):
-        self.a = [self.shape[0]]
-        for i in range(len(self.shape)):
-            if i > 0:
-                self.a.append([self.shape[i][0] + self.shape[0][0],
-                          self.shape[i][1] + self.shape[0][1]])
-        pygame.draw.polygon(screen, self.color, self.a)
+        self.all_sprites.draw(screen)
+        sprite = pygame.sprite.Group()
+        sprite.add(self.moving_sprite)
+        sprite.draw(screen)
 
     def move(self, screen):
-        self.shape[0][1] += 50
+        self.moving_sprite.rect.y += 10
         self.render(screen)
 
-    def click(self, pos, screen):
-        left = min(list(map(lambda x: x[0], self.a)))
-        right = max(list(map(lambda x: x[0], self.a)))
-        if pos[0] < left:
-            self.shape[0][0] -= 50
-        if pos[0] > right:
-            self.shape[0][0] += 50
+    def click(self, key, screen):
+        if key == pygame.K_RIGHT and self.moving_sprite.rect.x <= 450:
+            self.moving_sprite.rect.x += 50
+        elif key == pygame.K_LEFT and self.moving_sprite.rect.x >= 50:
+            self.moving_sprite.rect.x -= 50
         self.render(screen)

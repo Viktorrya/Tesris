@@ -18,13 +18,13 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONUP or event.type == pygame.KEYUP:
+            if event.type == pygame.MOUSEBUTTONUP or event.type == pygame.KEYDOWN:
                 if count == 0:
                     count = 1
                     play = True
                     shape = Shape(count_of_shapes)
-                else:
-                    shape.click(event.pos, screen)
+                elif event.type == pygame.KEYDOWN:
+                    shape.click(event.key, screen)
         screen.fill((0, 0, 0))
         board.render(screen)
         if play:
