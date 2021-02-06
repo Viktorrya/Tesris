@@ -27,7 +27,7 @@ class Shape:
         self.border = pygame.sprite.Sprite()
         self.border.image = pygame.Surface([500, 1])
         self.border.rect = self.border.image.get_rect()
-        self.border.rect.x, self.border.rect.y = 5, 750
+        self.border.rect.x, self.border.rect.y = 5, 800
         b.add(self.border)
         self.moving_sprite = Moving_shape(count, self.border)
 
@@ -38,7 +38,7 @@ class Shape:
         sprite.draw(screen)
 
     def move(self, screen):
-        self.moving_sprite.update()
+        self.moving_sprite.update(1)
         self.render(screen)
 
     def click(self, key, screen):
@@ -47,7 +47,11 @@ class Shape:
         elif key == pygame.K_LEFT and self.moving_sprite.rect.x >= 50:
             self.moving_sprite.rect.x -= 50
         elif key == pygame.K_SPACE:
-            self.moving_sprite.image = pygame.transform.rotate(screen, self.moving_sprite.image)
+            self.moving_sprite.image = pygame.transform.rotate(self.moving_sprite.image, 90)
+        elif key == pygame.K_DOWN:
+            a = True
+            while a:
+                a = not self.moving_sprite.update(1)
         self.render(screen)
 
     def ckeck_collid(self, screen):
@@ -66,9 +70,11 @@ class Moving_shape(pygame.sprite.Sprite):
         self.image = load_image(str(count % 4 + 1) + '.png', size)
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x, self.rect.y = 200, 50 - self.rect.bottom + self.rect.y
+        self.rect.x, self.rect.y = 200, - self.rect.bottom + self.rect.y
 
-    def update(self):
-        if not pygame.sprite.collide_mask(self, self.border):
-            self.rect = self.rect.move(0, 50)
+    def update(self, pix):
+        if not pygame.sprite.collide_mask(self, self.border) and \
+                not pygame.sprite.spritecollideany(self, b):
+            self.rect = self.rect.move(0, pix)
+            return False
         return True
