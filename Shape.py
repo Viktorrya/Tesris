@@ -54,10 +54,11 @@ class Shape:
                 a = not self.moving_sprite.update(1)
         self.render(screen)
 
-    def ckeck_collid(self, screen):
+    def ckeck_collid(self, screen, score):
         if pygame.sprite.spritecollideany(self.moving_sprite, b):
             b.add(self.moving_sprite)
             self.render(screen)
+            score += 1
             return True
         return False
 

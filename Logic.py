@@ -14,6 +14,7 @@ if __name__ == '__main__':
     count_of_shapes = 0
     fps = 50  # количество кадров в секунду
     clock = pygame.time.Clock()
+    score = 0
 
     running = True
     while running:
@@ -39,9 +40,16 @@ if __name__ == '__main__':
             screen.blit(text, (text_x, text_y))
         if play:
             shape.move(screen)
-            if shape.ckeck_collid(screen):
+            if shape.ckeck_collid(screen, score):
                 count_of_shapes += 1
                 shape = Shape(count_of_shapes)
+        font = pygame.font.Font('Tetris.ttf', 30)
+        text = font.render(str(score), True, (255, 255, 255))
+        text_x = 460
+        text_y = 10
+        text_w = text.get_width()
+        text_h = text.get_height()
+        screen.blit(text, (text_x, text_y))
         clock.tick(fps)
         pygame.display.flip()
     pygame.quit()
