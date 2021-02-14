@@ -40,4 +40,5 @@ def humans_when_defeat(screen):
             running = False
         clock.tick(fps)
         pygame.display.flip()
+    sprite.kill()
 

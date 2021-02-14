@@ -43,8 +43,10 @@ if __name__ == '__main__':
                 score += 1  # за каждую успешно опущенную фигурку - 1 балл
                 if board.check_line():  # проверка. нет ли заполненых лииний
                     score += 10
+                x1 = shape.coords[1][1]
                 shape = Shape(board)  # создание новой фигуры
-                if shape.check_collid(board) and shape.coords[0][0] == 0:  # проверка на проигрыш
+                x2 = shape.coords[1][1]
+                if x1 == x2 and shape.coords[0][0] == 0:  # проверка на проигрыш
                     play = False
                     count = 0
                     count_of_shapes = 0
@@ -52,6 +54,7 @@ if __name__ == '__main__':
                     board = Board()
                     board.render(screen)
                     score = 0
+                    screen.fill((0, 0, 0))
                     Humans.humans_when_defeat(screen)
             else:
                 shape.move(board)  # если препятствий нет, двигаем фигурку
