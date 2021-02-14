@@ -1,4 +1,4 @@
-import os
+import os, sys
 import pygame
 
 all_sprites = pygame.sprite.Group()
@@ -13,37 +13,31 @@ class Sprite_humans(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = -500, 300
 
     def update(self):
-        self.rect = self.rect.move(1, 0)
+        self.rect.x = self.rect.x + 1
 
 
-def load_image(name, size, colorkey=None):
+def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
+    # если файл не существует, то выходим
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
     image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    image = pygame.transform.scale(image, size)
     return image
 
 
 def humans_when_defeat(screen):
     running = True
-    fps = 30
+    fps = 100
     clock = pygame.time.Clock()
     sprite = Sprite_humans()
     all_sprites.add(sprite)
     while running:
+        screen.fill((0, 0, 0))
         all_sprites.draw(screen)
         sprite.update()
-        if sprite.rect.x == 500:
+        if sprite.rect.x == 0:
             running = False
         clock.tick(fps)
+        pygame.display.flip()
 
-
-size = width, height = 500, 800
-screen = pygame.display.set_mode(size)
-humans_when_defeat(screen)

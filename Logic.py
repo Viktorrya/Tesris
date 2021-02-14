@@ -1,6 +1,7 @@
 import pygame
 from Board import Board
 from Shape import Shape
+import Humans
 
 if __name__ == '__main__':
     pygame.init()
@@ -51,6 +52,7 @@ if __name__ == '__main__':
                     board = Board()
                     board.render(screen)
                     score = 0
+                    Humans.humans_when_defeat(screen)
             else:
                 shape.move(board)  # если препятствий нет, двигаем фигурку
         font = pygame.font.Font('Tetris.ttf', 30)  # отрисовываем значение счёта
