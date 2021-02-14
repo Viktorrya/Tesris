@@ -7,11 +7,10 @@ if __name__ == '__main__':
     pygame.display.set_caption('Tetris')
     size = width, height = 500, 800
     screen = pygame.display.set_mode(size)
-    board = Board()
-    board.render(screen)
+    board = Board()  # создаём поле
+    board.render(screen)  # отрисовываем его
     count = 0
     play = False
-    count_of_shapes = 0
     fps = 3  # количество кадров в секунду
     clock = pygame.time.Clock()
     score = 0
@@ -22,16 +21,15 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONUP or event.type == pygame.KEYDOWN:
-                if count == 0 and event.type == pygame.MOUSEBUTTONUP:
+                if count == 0:  # если игра ещё не начата, достаточно кликнуть мышью
                     count = 1
                     play = True
-                    shape = Shape(count_of_shapes, board)
-                    count_of_shapes += 1
-                elif event.type == pygame.KEYDOWN:
+                    shape = Shape(board)  # создаём первую фигурку
+                elif event.type == pygame.KEYDOWN:  # обрабатывает нажатия с клавиатуры
                     shape.click(event.key, board)
         screen.fill((0, 0, 0))
         board.render(screen)
-        if not play:
+        if not play:  # пока игра не началась, пользователь видит её заставку
             font = pygame.font.Font('Tetris.ttf', 70)
             text = font.render("Tetris", True, (100, 255, 100))
             text_x = width // 2 - text.get_width() // 2
@@ -40,18 +38,28 @@ if __name__ == '__main__':
             text_h = text.get_height()
             screen.blit(text, (text_x, text_y))
         if play:
-            if shape.check_collid(board):
-                board.check_line()
-                shape = Shape(count_of_shapes, board)
-                if shape.check_collid(board) and shape.coords[0][0] == 0:
+            if shape.check_collid(board):  # проверка на столкновение, она означает что фигурка приземлилась
+                score += 1  # за каждую успешно опущенную фигурку - 1 балл
+                if board.check_line():  # проверка. нет ли заполненых лииний
+                    score += 10
+                shape = Shape(board)  # создание новой фигуры
+                if shape.check_collid(board) and shape.coords[0][0] == 0:  # проверка на проигрыш
                     play = False
                     count = 0
                     count_of_shapes = 0
+                    screen = pygame.display.set_mode(size)
                     board = Board()
                     board.render(screen)
-                count_of_shapes += 1
+                    score = 0
             else:
-                shape.move(board)
+                shape.move(board)  # если препятствий нет, двигаем фигурку
+        font = pygame.font.Font('Tetris.ttf', 30)  # отрисовываем значение счёта
+        text = font.render(str(score), True, (255, 255, 255))
+        text_x = 460
+        text_y = 10
+        text_w = text.get_width()
+        text_h = text.get_height()
+        screen.blit(text, (text_x, text_y))
         clock.tick(fps)
         pygame.display.flip()
     pygame.quit()
