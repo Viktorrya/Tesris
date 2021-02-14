@@ -43,10 +43,15 @@ if __name__ == '__main__':
                 score += 1  # за каждую успешно опущенную фигурку - 1 балл
                 if board.check_line():  # проверка. нет ли заполненых лииний
                     score += 10
-                x1 = shape.coords[1][1]
+                a = shape.coords
                 shape = Shape(board)  # создание новой фигуры
-                x2 = shape.coords[1][1]
-                if x1 == x2 and shape.coords[0][0] == 0:  # проверка на проигрыш
+                b = False
+                print(a, shape. coords)
+                for i in shape.coords:
+                    if i in a:
+                        b = True
+                        break
+                if b:  # проверка на проигрыш
                     play = False
                     count = 0
                     count_of_shapes = 0
