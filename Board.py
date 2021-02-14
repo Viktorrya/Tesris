@@ -1,4 +1,5 @@
 import pygame
+from Shape import Shape
 
 
 class Board:
@@ -24,21 +25,16 @@ class Board:
                                   self.cell_size, self.cell_size))
 
     def check_line(self):
-        count = 0
         for i in range(len(self.board)):
-            print(self.board[i])
+            count = 0
             for j in self.board[i]:
                 if j != (0, 0, 0):
                     count += 1
-            if count == len(self.board[i]):
+            if count == 10:
                 self.board[i] = [(0, 0, 0)] * self.width
-                for _ in range(len(self.board) - 2, -1, -1):
+                for _ in range(len(self.board) - 1, 0, -1):
                     if _ <= i:
-                        self.board[_] = self.board[_ + 1]
+                        self.board[_] = self.board[_ - 1]
 
-    def check_defeat(self):
-        if self.board[0] != [(0, 0, 0)] * self.width:
-            return True
-        return False
 
 

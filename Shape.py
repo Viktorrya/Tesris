@@ -42,19 +42,21 @@ class Shape:
             for i in self.coords:
                 if i[1] > 8:
                     a = False
-            if not (board.board[i[0]][i[1] + 1] != (0, 0, 0) and
-                    [i[0], i[1] + 1] not in self.coords) and a:
-                for i in self.coords:
-                    i[1] += 1
+            if a:
+                if not (board.board[i[0]][i[1] + 1] != (0, 0, 0) and
+                        [i[0], i[1] + 1] not in self.coords):
+                    for i in self.coords:
+                        i[1] += 1
         elif key == pygame.K_LEFT:
             a = True
             for i in self.coords:
                 if i[1] < 1:
                     a = False
-            if not (board.board[i[0]][i[1] - 1] != (0, 0, 0) and
-                    [i[0], i[1] - 1] not in self.coords) and a:
-                for i in self.coords:
-                    i[1] -= 1
+            if a:
+                if not (board.board[i[0]][i[1] - 1] != (0, 0, 0) and
+                        [i[0], i[1] - 1] not in self.coords):
+                    for i in self.coords:
+                        i[1] -= 1
         elif key == pygame.K_DOWN:
             a = True
             while a:
